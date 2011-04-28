@@ -14,17 +14,15 @@ class FightForNetNeutrality
 
   def call(env)
     req = Rack::Request.new(env)
-    ooo_ua = (env["HTTP_X_FIREWALL"] || "").include? "OpenOffice"
-    if @ips_banned.any? {|ips| ips.include? req.ip } || ooo_ua
+    ooo = (env["HTTP_X_FIREWALL"] || "").include? "OpenOffice"
+    if @ips_banned.any? {|ips| ips.include? req.ip } || ooo
       [403, {"Content-Type" => "text/html; charset=utf8"}, [@html]]
     else
       @app.call(env)
     end
   end
-end
 
-
-HTML = <<-EOS
+  HTML = <<-EOS
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -62,3 +60,5 @@ basiquement à s'attaquer à la liberté d'expression du peuple et devrait
 </body>
 </html>
 EOS
+
+end
